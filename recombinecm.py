@@ -1,6 +1,9 @@
 from copy import deepcopy
 import difflib
+import os.path
+
 from notebook.services.contents.filemanager import FileContentsManager
+from notebook.services.contents.filecheckpoints import FileCheckpoints
 
 def clean_copy(nb):
     nb2 = deepcopy(nb)
@@ -61,3 +64,16 @@ class RecombineContentsManager(FileContentsManager):
             return with_output
 
         return recombine(clean, with_output)
+
+    def _checkpoints_class_default(self):
+        return RecoFileCheckpoints
+
+class RecoFileCheckpoints(FileCheckpoints):
+    def restore_checkpoint(self, contents_mgr, checkpoint_id, path):
+        super().restore_checkpoint(contents_mgr, checkpoint_id, path)
+
+        # Delete the .clean version of the file, so we don't try to recombine
+        # it with the checkpointed copy
+        clean_path = contents_mgr._get_os_path(path) + '.clean'
+        if os.path.isfile(clean_path):
+            os.unlink(clean_path)

@@ -1,4 +1,3 @@
-from nbformat import from_dict
 from nbformat.v4 import new_notebook, new_code_cell, new_output, new_markdown_cell
 
 import recombinecm

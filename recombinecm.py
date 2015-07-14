@@ -1,3 +1,8 @@
+"""Contents manager which splits a 'clean' copy out and recombines on load.
+"""
+
+__version__ = '0.1'
+
 from copy import deepcopy
 import difflib
 import os.path
